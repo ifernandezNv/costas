@@ -160,7 +160,7 @@ function App() {
                 <p className='text-xl font-medium'>Cantidad Inicial: <span className='font-semibold text-indigo-700'>{formatearCantidad(cantidadInicial)}</span></p>
                 <p className='text-xl font-medium'>Valor del UMA: <span className='font-semibold text-indigo-700'>{formatearCantidad(uma.valor)}</span></p>
                 <p className='text-xl font-medium'>Año: {uma.year}</p>
-                <p className='text-xl font-medium'>Costa: <span className='font-semibold text-indigo-700'>{formatearCantidad(cantidadFinal)}</span></p>
+                <p className='text-xl font-medium'>Costas: <span className='font-semibold text-indigo-700'>{formatearCantidad(cantidadFinal)}</span></p>
                 
               </>
             )}
