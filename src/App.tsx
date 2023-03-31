@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Alerta from './components/Alerta';
 import Spinner from './components/Spinner';
 import Paso from './components/Paso';
@@ -9,11 +9,12 @@ export interface TAlerta {
   tipo: string
 }
 interface TPaso{
+  id?: number
   porcentaje: string,
   porcentajeCantidadInicial: number,
-  umas: number,
-  dineroUmas: number,
-  nuevaCantidadInicial: number,
+  umas?: number,
+  dineroUmas?: number,
+  nuevaCantidadInicial?: number,
   acumulado: number
 }
 
@@ -23,14 +24,25 @@ function App() {
   const [cantidadFinal, setCantidadFinal] = useState<number>(0);
   const [alerta, setAlerta] = useState<TAlerta>({mensaje: '', tipo: ''})
   const [cargando, setCargando] = useState<Boolean>(false)
-  const [paso, setPaso] = useState<TPaso>({porcentaje: '', porcentajeCantidadInicial: 0, umas: 0, dineroUmas: 0, nuevaCantidadInicial: 0, acumulado: 0})
-  const [pasos, setPasos] = useState<TPaso[]>([])
+  const [paso1, setPaso1] = useState<TPaso>({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
+  const [paso2, setPaso2] = useState<TPaso>({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
+  const [paso3, setPaso3] = useState<TPaso>({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
+  const [paso4, setPaso4] = useState<TPaso>({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
+
+  useEffect(()=>{
+    return ()=>{
+      setPaso1({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
+      setPaso2({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
+      setPaso3({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
+      setPaso4({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
+    }
+  },[])
 
   function obtenerCostas(): void{
     setCargando(true)
     let sumatoria = 0
     let cantidadInicialBandera = cantidadInicial
-    if(cantidadInicial === 0){
+    if(cantidadInicialBandera === 0 || cantidadInicialBandera === null){
       setAlerta({mensaje:'La cantidad capturada debe ser mayor a 0', tipo: 'error'})
       eliminarAlerta()
       setCargando(false)
@@ -38,7 +50,8 @@ function App() {
     }
     if((cantidadInicialBandera * 0.25) > (300 * uma.valor)){
       sumatoria += (300 * uma.valor) * 0.25
-      setPaso({
+      setPaso1({
+        id: Date.now() + 1,
         porcentaje: '25%',
         porcentajeCantidadInicial: cantidadInicialBandera * 0.25,
         umas: 300,
@@ -46,12 +59,12 @@ function App() {
         nuevaCantidadInicial: cantidadInicialBandera - (300 * uma.valor),
         acumulado: sumatoria
       })
-      setPasos([...pasos, paso])
       cantidadInicialBandera -= (300 * uma.valor)
       if((cantidadInicialBandera * 0.20) > (1200 * uma.valor)){
         sumatoria += (1200 * uma.valor) * 0.20
         cantidadInicialBandera -= (1200 * uma.valor)
-        setPaso({
+        setPaso2({
+          id: Date.now() + 5,
           porcentaje: '20%',
           porcentajeCantidadInicial: (cantidadInicialBandera) * 0.20,
           umas: 1200,
@@ -59,25 +72,63 @@ function App() {
           nuevaCantidadInicial: cantidadInicialBandera - (1200 * uma.valor),
           acumulado: sumatoria
         })
-        setPasos([...pasos, paso])
         if((cantidadInicialBandera * 0.15) > (6000 * uma.valor)){
           sumatoria += (6000 * uma.valor) * 0.15
           cantidadInicialBandera -= (6000 * uma.valor)
+          setPaso3({
+            id: Date.now() + 15,
+            porcentaje: '15%',
+            porcentajeCantidadInicial: (cantidadInicialBandera) * 0.15,
+            umas: 6000,
+            dineroUmas: 6000 * uma.valor,
+            nuevaCantidadInicial: cantidadInicialBandera - (6000 * uma.valor),
+            acumulado: sumatoria
+          })
+          
           sumatoria += (cantidadInicialBandera * 0.10)
+          setPaso4({
+            id: Date.now() + 400,
+            porcentaje: '10%',
+            porcentajeCantidadInicial: (cantidadInicialBandera) * 0.10,
+            acumulado: sumatoria
+          })
         }else{
           sumatoria += (cantidadInicialBandera * 0.15)
+          setPaso3({
+            id: Date.now() + 300,
+            porcentaje: '15%',
+            porcentajeCantidadInicial: (cantidadInicialBandera) * 0.15,
+            acumulado: sumatoria
+          })
+          setPaso4({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
         }
       }else{
         sumatoria += (cantidadInicialBandera * 0.20)
+        setPaso2({
+          id: Date.now() + 20,
+          porcentaje: '20%',
+          porcentajeCantidadInicial: (cantidadInicialBandera) * 0.20,
+          acumulado: sumatoria
+        })
+        setPaso3({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
+        setPaso4({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
       }
     }else{
       sumatoria += (cantidadInicial * 0.25)
+      setPaso1({
+        id: Date.now() + 100,
+        porcentaje: '25%',
+        porcentajeCantidadInicial: (cantidadInicialBandera) * 0.25,
+        acumulado: sumatoria
+      })
+      setPaso2({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
+      setPaso3({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
+      setPaso4({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
     }
     setCantidadFinal(sumatoria)
     setTimeout(() => {
-      setCargando(false)  
-    }, 2000);
-    console.log(pasos)
+      setCargando(false)
+    }, 2000)
   }
 
   function eliminarAlerta(){
@@ -120,13 +171,13 @@ function App() {
           <section className='flex flex-col gap-5 my-5'>
             {cargando ? <Spinner/> : cantidadFinal > 0 &&  (
               <>
-                <h2 className='capitalize text-center font-semibold text-xl'>Desglose de cantidades</h2>
-                {pasos.map(paso => <Paso key={paso.porcentaje} paso={paso}/>)}
-                <h2 className='capitalize text-center font-semibold text-xl'>Resumen Final</h2>
-                <p>Cantidad Inicial: {formatearCantidad(cantidadInicial)}</p>
-                <p>Año: {uma.year}</p>
-                <p>Valor del UMA: {formatearCantidad(uma.valor)}</p>
-                <p>Acumulado: {formatearCantidad(cantidadFinal)}</p>
+                <h2 className='capitalize text-center font-semibold text-2xl'>Desglose de cantidades</h2>
+                {[paso1, paso2, paso3, paso4].map(paso => <Paso key={paso.id} paso={paso}/>)}
+                <h2 className='capitalize text-center font-semibold text-2xl'>Resumen Final</h2>
+                <p className='text-xl font-medium'>Cantidad Inicial: <span className='font-semibold text-indigo-700'>{formatearCantidad(cantidadInicial)}</span></p>
+                <p className='text-xl font-medium'>Valor del UMA: <span className='font-semibold text-indigo-700'>{formatearCantidad(uma.valor)}</span></p>
+                <p className='text-xl font-medium'>Año: {uma.year}</p>
+                <p className='text-xl font-medium'>Costa: <span className='font-semibold text-indigo-700'>{formatearCantidad(cantidadFinal)}</span></p>
                 
               </>
             )}

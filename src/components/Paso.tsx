@@ -1,15 +1,18 @@
 import { formatearCantidad } from '../helpers';
 function Paso({paso}) {
-    const {porcentaje, porcentajeCantidadInicial, umas, dineroUmas, acumulado} = paso;
+    const {porcentaje, porcentajeCantidadInicial, acumulado, umas, dineroUmas} = paso
   return (
     <>
-        {porcentaje !== '' && (
-            <div>
-                <h3>Porcentaje de la cantidad capturada: {porcentaje} - <span>{formatearCantidad(porcentajeCantidadInicial)}</span></h3>
-                <p>Cantidad de Umas: {umas} - {formatearCantidad(dineroUmas)}</p>
-                <p>Cantidad Acumulada: {formatearCantidad(acumulado)}</p>
-            </div>
-        )}
+      {Object.values(paso).includes(0) ? null :  (
+        <div>
+          <p className='text-lg'>Porcentaje: {porcentaje} = <span className='font-medium text-indigo-700'>{formatearCantidad(porcentajeCantidadInicial)}</span></p>
+          {umas && dineroUmas && 
+          (
+            <p className='text-lg'>UMAS: {umas} = <span className='font-medium text-indigo-700'>{formatearCantidad(dineroUmas)}</span></p>
+          )}
+          <p className='text-lg'>Acumulado: <span className='font-medium text-indigo-700'>{formatearCantidad(acumulado)}</span></p>
+        </div>
+      )}
     </>
   )
 }
