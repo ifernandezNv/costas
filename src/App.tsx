@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Alerta from './components/Alerta';
 import Spinner from './components/Spinner';
 import Paso from './components/Paso';
@@ -29,15 +29,6 @@ function App() {
   const [paso3, setPaso3] = useState<TPaso>({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
   const [paso4, setPaso4] = useState<TPaso>({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
 
-  useEffect(()=>{
-    return ()=>{
-      setPaso1({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
-      setPaso2({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
-      setPaso3({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
-      setPaso4({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
-    }
-  },[])
-
   function obtenerCostas(): void{
     setCargando(true)
     let sumatoria = 0
@@ -51,7 +42,6 @@ function App() {
     if((cantidadInicialBandera * 0.25) > (300 * uma.valor)){
       sumatoria += (300 * uma.valor) * 0.25
       setPaso1({
-        id: Date.now() + 1,
         porcentaje: '25%',
         porcentajeCantidadInicial: cantidadInicialBandera * 0.25,
         umas: 300,
@@ -64,7 +54,6 @@ function App() {
         sumatoria += (1200 * uma.valor) * 0.20
         cantidadInicialBandera -= (1200 * uma.valor)
         setPaso2({
-          id: Date.now() + 5,
           porcentaje: '20%',
           porcentajeCantidadInicial: (cantidadInicialBandera) * 0.20,
           umas: 1200,
@@ -76,7 +65,6 @@ function App() {
           sumatoria += (6000 * uma.valor) * 0.15
           cantidadInicialBandera -= (6000 * uma.valor)
           setPaso3({
-            id: Date.now() + 15,
             porcentaje: '15%',
             porcentajeCantidadInicial: (cantidadInicialBandera) * 0.15,
             umas: 6000,
@@ -84,10 +72,8 @@ function App() {
             nuevaCantidadInicial: cantidadInicialBandera - (6000 * uma.valor),
             acumulado: sumatoria
           })
-          
           sumatoria += (cantidadInicialBandera * 0.10)
           setPaso4({
-            id: Date.now() + 400,
             porcentaje: '10%',
             porcentajeCantidadInicial: (cantidadInicialBandera) * 0.10,
             acumulado: sumatoria
@@ -95,7 +81,6 @@ function App() {
         }else{
           sumatoria += (cantidadInicialBandera * 0.15)
           setPaso3({
-            id: Date.now() + 300,
             porcentaje: '15%',
             porcentajeCantidadInicial: (cantidadInicialBandera) * 0.15,
             acumulado: sumatoria
@@ -105,7 +90,6 @@ function App() {
       }else{
         sumatoria += (cantidadInicialBandera * 0.20)
         setPaso2({
-          id: Date.now() + 20,
           porcentaje: '20%',
           porcentajeCantidadInicial: (cantidadInicialBandera) * 0.20,
           acumulado: sumatoria
@@ -116,7 +100,6 @@ function App() {
     }else{
       sumatoria += (cantidadInicial * 0.25)
       setPaso1({
-        id: Date.now() + 100,
         porcentaje: '25%',
         porcentajeCantidadInicial: (cantidadInicialBandera) * 0.25,
         acumulado: sumatoria
