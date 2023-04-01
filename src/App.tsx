@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import Alerta from './components/Alerta';
-import Spinner from './components/Spinner';
-import Paso from './components/Paso';
-import { formatearCantidad } from './helpers';
-
+import Spinner from './components/Spinner'
+import Paso from './components/Paso'
+import { formatearCantidad } from './helpers'
+import {ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 export interface TAlerta {
   mensaje: string,
   tipo: string
@@ -19,10 +19,9 @@ interface TPaso{
 }
 
 function App() {
-  const [uma, setUma] = useState({year: '2023', valor: 103.74});
-  const [cantidadInicial, setCantidadInicial] = useState<number>(0);
-  const [cantidadFinal, setCantidadFinal] = useState<number>(0);
-  const [alerta, setAlerta] = useState<TAlerta>({mensaje: '', tipo: ''})
+  const [uma, setUma] = useState({year: '2023', valor: 103.74})
+  const [cantidadInicial, setCantidadInicial] = useState<number>(0)
+  const [cantidadFinal, setCantidadFinal] = useState<number>(0)
   const [cargando, setCargando] = useState<Boolean>(false)
   const [paso1, setPaso1] = useState<TPaso>({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
   const [paso2, setPaso2] = useState<TPaso>({id: Date.now(),porcentaje: '', porcentajeCantidadInicial: 0, acumulado: 0})
@@ -34,8 +33,16 @@ function App() {
     let sumatoria = 0
     let cantidadInicialBandera = cantidadInicial
     if(cantidadInicialBandera === 0 || cantidadInicialBandera === null){
-      setAlerta({mensaje:'La cantidad capturada debe ser mayor a 0', tipo: 'error'})
-      eliminarAlerta()
+      toast.error('La Cantidad Capturada Debe Ser Mayor a 0',
+        { position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      )
       setCargando(false)
       return
     }
@@ -113,20 +120,34 @@ function App() {
       setCargando(false)
     }, 2000)
   }
-
-  function eliminarAlerta(){
-    setTimeout(() => {
-      setAlerta({mensaje: '', tipo: ''})  
-    }, 3000)
-    
+  
+  async function copiar(){
+    let texto:string = ''
+    for(let paso of [paso1, paso2, paso3, paso4]){
+      let porcentaje = paso.porcentaje.split('%')[0]
+      if(!Object.values(paso).includes(0) || !Object.values(paso) === null){
+        texto += `El ${paso.porcentaje} ${paso.umas === 300 ? `por los primeros 300 días de UMA ${formatearCantidad(Number(porcentaje / 100) * paso.dineroUmas)}` : paso.umas > 300 ? `por los subsecuentes ${paso.umas} UMA ${formatearCantidad(Number(porcentaje / 100) * paso.dineroUmas)}` : `de lo que rebase la anterior cifra ${formatearCantidad(paso.porcentajeCantidadInicial)}`}\n`
+      }
+    }
+    await navigator.clipboard.writeText(texto)
+    toast.success('Resumen Copiado al Portapapeles',
+        { position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+    )
   }
+
 
   return (
     <main className="min-h-screen w-full bg-gradient-to-r from-sky-500 to-indigo-500 flex flex-col items-center justify-center">
       <section>
         <h1 className='text-center text-white text-4xl capitalize font-bold pt-10'>Cálculo de costas - Lerdo Abogados</h1>
         <div className='bg-white p-5  my-10 rounded shadow-lg'>
-          {alerta.mensaje && <Alerta alerta={alerta}/>}
           <div className='flex flex-col gap-4'>
             <label htmlFor="cantidad" className='font-semibold text-xl text-gray-800'>Cantidad: </label>
             <input type="number" id='cantidad' placeholder='0' onChange={(e)=>setCantidadInicial(Number(e.target.value))} className='p-2 border-2 rounded border-black text-gray-800'/>
@@ -160,7 +181,8 @@ function App() {
                   <tbody>
                     {[paso1, paso2, paso3, paso4].map(paso => <Paso key={paso.id} paso={paso}/>)}
                   </tbody>
-                </table>
+                </table>    
+                <button onClick={copiar} className='rounded p-4 text-white font-bold text-xl bg-indigo-500 hover:bg-indigo-900 transition-all'>Copiar Resultados</button>
                 <h2 className='capitalize text-center font-semibold text-2xl'>Resumen Final</h2>
                 <p className='text-xl font-medium'>Cantidad Inicial: <span className='font-semibold text-indigo-700'>{formatearCantidad(cantidadInicial)}</span></p>
                 <p className='text-xl font-medium'>Valor del UMA: <span className='font-semibold text-indigo-700'>{formatearCantidad(uma.valor)}</span></p>
@@ -172,6 +194,9 @@ function App() {
           </section>
         </div>
       </section>
+      <ToastContainer
+
+      />
     </main>
   )
 }
