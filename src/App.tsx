@@ -124,7 +124,7 @@ function App() {
   async function copiar(){
     let texto:string = ''
     for(let paso of [paso1, paso2, paso3, paso4]){
-      let porcentaje = paso.porcentaje.split('%')[0]
+      let porcentaje: number = Number(paso.porcentaje.split('%')[0])
       if(!Object.values(paso).includes(0) || !Object.values(paso) === null){
         texto += `El ${paso.porcentaje} ${paso.umas === 300 ? `por los primeros 300 días de UMA ${formatearCantidad(Number(porcentaje / 100) * paso.dineroUmas)}` : paso.umas > 300 ? `por los subsecuentes ${paso.umas} UMA ${formatearCantidad(Number(porcentaje / 100) * paso.dineroUmas)}` : `de lo que rebase la anterior cifra ${formatearCantidad(paso.porcentajeCantidadInicial)}`}\n`
       }
