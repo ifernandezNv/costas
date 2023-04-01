@@ -155,7 +155,12 @@ function App() {
             {cargando ? <Spinner/> : cantidadFinal > 0 &&  (
               <>
                 <h2 className='capitalize text-center font-semibold text-2xl'>Desglose de cantidades</h2>
-                {[paso1, paso2, paso3, paso4].map(paso => <Paso key={paso.id} paso={paso}/>)}
+                
+                <table>
+                  <tbody>
+                    {[paso1, paso2, paso3, paso4].map(paso => <Paso key={paso.id} paso={paso}/>)}
+                  </tbody>
+                </table>
                 <h2 className='capitalize text-center font-semibold text-2xl'>Resumen Final</h2>
                 <p className='text-xl font-medium'>Cantidad Inicial: <span className='font-semibold text-indigo-700'>{formatearCantidad(cantidadInicial)}</span></p>
                 <p className='text-xl font-medium'>Valor del UMA: <span className='font-semibold text-indigo-700'>{formatearCantidad(uma.valor)}</span></p>

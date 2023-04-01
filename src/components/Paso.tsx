@@ -1,17 +1,15 @@
 import { formatearCantidad } from '../helpers';
 function Paso({paso}) {
-    const {porcentaje, porcentajeCantidadInicial, acumulado, umas, dineroUmas} = paso
+    const {porcentaje, porcentajeCantidadInicial, umas, dineroUmas} = paso
+    const porcentajeSplit = porcentaje.split('%')
   return (
     <>
       {Object.values(paso).includes(0) ? null :  (
-        <div>
-          <p className='text-lg'>Porcentaje: {porcentaje} = <span className='font-medium text-indigo-700'>{formatearCantidad(porcentajeCantidadInicial)}</span></p>
-          {umas && dineroUmas && 
-          (
-            <p className='text-lg'>UMAS: {umas} = <span className='font-medium text-indigo-700'>{formatearCantidad(dineroUmas)}</span></p>
-          )}
-          <p className='text-lg'>Acumulado: <span className='font-medium text-indigo-700'>{formatearCantidad(acumulado)}</span></p>
-        </div>
+        <tr className='border-2 '>
+          <td className='text-lg p-2'>El {porcentaje}  {umas === 300 ? ' por los primeros 300 días de UMA' : umas > 300 ? `por los subsecuentes ${umas} UMA` : 'de lo que rebase la anterior cifra'} 
+          </td>
+          <td className='font-medium text-indigo-700 border-2 p-2'>{umas ? formatearCantidad(dineroUmas * Number(porcentajeSplit[0]/100)) : formatearCantidad(porcentajeCantidadInicial)}</td>
+        </tr>
       )}
     </>
   )
