@@ -32,7 +32,7 @@ function App() {
     setCargando(true)
     let sumatoria = 0
     let cantidadInicialBandera = cantidadInicial
-    if(cantidadInicialBandera === 0 || cantidadInicialBandera === null){
+    if(cantidadInicialBandera <= 0 || cantidadInicialBandera === null){
       toast.error('La Cantidad Capturada Debe Ser Mayor a 0',
         { position: "top-right",
           autoClose: 5000,
