@@ -158,6 +158,7 @@ function App() {
               const [valor, year] = e.target.value.split('-')
               setUma({year, valor: Number(valor)})
             }}>
+              <option value='108.57-2024'>2024 - $108.57</option>
               <option value='103.74-2023'>2023 - $103.74</option>
               <option value='96.22-2022'>2022 - $96.22</option>
               <option value='89.62-2021'>2021 - $89.62</option>
